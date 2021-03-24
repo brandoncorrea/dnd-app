@@ -1,37 +1,50 @@
-const examples = require('../controllers/example.controller'),
+const example = require('../controllers/example.controller'),
     express = require('express'), 
     router = express.Router()
 
-/*
+
 var express = require("express");
 var SchemaName = require("../models/schemaName");
 var router = express.Router();
-var mongodb = require('mongodb');
+
 // Add request logic
-router.post("/RoutePath", function(req, res) {
+router.post("/RoutePath", function(req, res) 
+{
   var schemaName = new SchemaName({
     property1: req.body.propertyValue1,
     property2: req.body.propertyValue2,
     property3: req.body.propertyValue3,
   });
-  schemaName.save( function(err, schemaName) {
+
+  schemaName.save(function(err, schemaName) 
+  {
     if (err) 
         return res.status(400).json(err);
     res.status(200).json(schemaName);
   });
 });
+
 // Update request logic
-router.post("/RoutePath", function(req, res) {
-  SchemaName.updateOne( { key: req.body.key }, 
-    { $set: {
-      property1: req.body.propertyValue1,
-      property2: req.body.propertyValue2,
-      property3: req.body.propertyValue3,
-    } },
-    function(err, results) {
+router.post("/RoutePath", function(req, res) 
+{
+  SchemaName.updateOne( 
+    { 
+      key: req.body.key 
+    }, 
+    { 
+      $set: 
+      {
+        property1: req.body.propertyValue1,
+        property2: req.body.propertyValue2,
+        property3: req.body.propertyValue3,
+      } 
+    },
+    function(err, results) 
+    {
       if (err) console.log(err);
       res.send(results);
-  });
+    }
+  );
 });
 // Delete request logic
 router.post("/RoutePath", function(req, res) {
@@ -47,9 +60,9 @@ router.get("/RoutePath", function(req, res) {
     res.send(results);
   });
 });
-*/    
+ 
 
 router.route('/')
-  .get(examples.hello);
+  .get(example.hello);
   
 module.exports = router;
