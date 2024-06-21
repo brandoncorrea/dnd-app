@@ -2,7 +2,7 @@
 
 An app to help me play Dungeons & Dragons.
 
-[![Run Tests](https://github.com/brandoncorrea/dnd-app/actions/workflows/test.yml/badge.svg)](https://github.com/brandoncorrea/dnd-app/actions/workflows/test.yml)
+[![Run Build](https://github.com/brandoncorrea/dnd-app/actions/workflows/build.yml/badge.svg)](https://github.com/brandoncorrea/dnd-app/actions/workflows/build.yml)
 
 ## Setup
 
