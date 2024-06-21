@@ -1,70 +1,99 @@
-# Getting Started with Create React App
+# D&D Website
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+An app to help me play Dungeons & Dragons.
 
-## Available Scripts
+## Setup
 
-In the project directory, you can run:
+    # clojure
+    brew install clojure
 
-### `npm start`
+    # node
+    brew install npm
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+    # http-server
+    npm i http-server -g
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+    # NPM Install
+    npm i
 
-### `npm test`
+## Commands
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+    # Watch for css changes
+    clj -Mcss
 
-### `npm run build`
+    # watch for both css/cljs changes and run specs
+    clj -Mtest:dev-
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+    # build cljs on-change (for development)
+    clj -Mcljs auto production
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+    # build cljs once (for production)
+    clj -Mcljs once production
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Sandbox
 
-### `npm run eject`
+### Configuration
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+The sandbox pages will only appear in the `development` environment.
+To show them, update `main.cljs` with the `"development"` configuration.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+For production, you will want these hidden. Update `main.cljs` to start up with `"production"`.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+### Playing in the Sandbox
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+A sandbox page is just an implementation of `page/render`.
 
-## Learn More
+1. Create a cljs file under `src/cljs/dnd/sandbox` - call it whatever you'd like!
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```clojure
+(ns dnd.sandbox.example
+  (:require [dnd.page :as page]))
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+(defmethod page/render :sandbox/example [_]
+  ; Your hiccup code here...
+  )
+```
 
-### Code Splitting
+2. Add your new namespace to `dnd.sandbox.core`
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+```clojure
+(ns dnd.sandbox.core
+  (:require ;...namespaces... 
+            [dnd.sandbox.example]
+            ;...namespaces...
+    ))
+```
 
-### Analyzing the Bundle Size
+3. Create a test for your new sandbox in `dnd.router-spec`
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+```clojure
+(context "sandbox" 
+  ; ...specs... 
+  (it-routes "/sandbox/example" :sandbox/example)
+  ; ...more specs...
+  )
+```
 
-### Making a Progressive Web App
+4. Pass your test in `dnd.router`
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+```clojure
+(defn def-sandbox []
+  ; ...routes...
+  (defroute "/sandbox/example" [] (page/install! :sandbox/example))
+  ; ...more routes...
+  )
+```
 
-### Advanced Configuration
+Note: Your `:sandbox/keyword` will need to exactly match your route: `"/sandbox/keyword"`.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## Deployment
 
-### Deployment
+    # Build cljs
+    clj -Mcljs once production
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+    # Build css
+    clj -Mcss once
 
-### `npm run build` fails to minify
+## Local HTTP Server
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+    bin/server

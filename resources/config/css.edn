@@ -1,0 +1,7 @@
+{
+ :source-dir  "dev/dnd/styles"
+ :var         dnd.styles.main/screen
+ :output-file "resources/public/css/dnd.css"
+ :flags       {:pretty-print? true
+               :vendors       ["webkit" "moz" "o"]}
+ }
