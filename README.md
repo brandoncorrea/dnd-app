@@ -2,6 +2,8 @@
 
 An app to help me play Dungeons & Dragons.
 
+[![Run Tests](https://github.com/brandoncorrea/dnd-app/actions/workflows/test.yml/badge.svg)](https://github.com/brandoncorrea/dnd-app/actions/workflows/test.yml)
+
 ## Setup
 
     # clojure
