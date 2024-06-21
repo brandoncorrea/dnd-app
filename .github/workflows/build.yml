@@ -1,10 +1,19 @@
-name: Run Tests
+name: Run Build
 
 on:
   push:
     branches: [ master ]
   pull_request:
     branches: [ master ]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
 
 jobs:
   test:
