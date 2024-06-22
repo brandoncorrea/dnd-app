@@ -3,4 +3,4 @@
 
 (defmethod page/render :home []
   [:div
-   [:h1 "Hello, Static World!"]])
+   [:h1 "Hello, Adventurer!"]])

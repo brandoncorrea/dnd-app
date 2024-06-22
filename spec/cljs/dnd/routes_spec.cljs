@@ -13,13 +13,4 @@
           (sut/defroutes))
 
   (it-routes "/" :home)
-
-  (context "sandbox"
-    (before (reset! config/environment "development")
-            (sut/defroutes))
-    (after (reset! config/environment nil))
-
-    (it-routes "/sandbox" :sandbox)
-    (it-routes "/sandbox/home" :sandbox/home)
-    )
   )

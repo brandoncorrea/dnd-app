@@ -1,18 +1,23 @@
 {
- :paths     ["dev" "src/cljc" "src/cljs" "resources"]
+ :paths     ["dev" "resources" "src/clj" "src/cljc" "src/cljs"]
  :mvn/repos {"maven_central" {:url "https://repo.maven.apache.org/maven2/"}}
  :deps      {
-             clj-commons/secretary          {:mvn/version "1.2.4"}
-             com.cleancoders.c3kit/scaffold {:mvn/version "2.0.3"}
-             com.cleancoders.c3kit/wire     {:mvn/version "2.1.4"}
-             hiccup/hiccup                  {:mvn/version "1.0.5"}
-             org.clojure/clojure            {:mvn/version "1.11.3"}
-             org.clojure/clojurescript      {:mvn/version "1.11.132"}
-             venantius/accountant           {:mvn/version "0.2.5"}
+             compojure/compojure        {:mvn/version "1.7.1"}
+             com.cleancoders.c3kit/wire {:mvn/version "2.1.4"}
+             hiccup/hiccup              {:mvn/version "1.0.5"}
+             org.clojure/clojure        {:mvn/version "1.11.3"}
              }
  :aliases   {
-             :test {:extra-deps  {speclj/speclj {:mvn/version "3.4.8"}}
-                    :extra-paths ["spec/cljc" "spec/cljs"]}
+             :test {:extra-deps  {
+                                  speclj/speclj                  {:mvn/version "3.4.8"}
+                                  org.clojure/clojurescript      {:mvn/version "1.11.132"}
+                                  venantius/accountant           {:mvn/version "0.2.5"}
+                                  com.cleancoders.c3kit/scaffold {:mvn/version "2.0.3"}
+                                  clj-commons/secretary          {:mvn/version "1.2.4"}
+                                  }
+                    :extra-paths ["spec/clj" "spec/cljc" "spec/cljs"]}
+             :spec {:main-opts ["-m" "speclj.main" "-c"]}
+             :run  {:main-opts ["-m" "dnd.main"]}
              :cljs {:main-opts ["-m" "c3kit.scaffold.cljs"]}
              :css  {:main-opts ["-m" "c3kit.scaffold.css"]}
              :dev  {:main-opts ["-m" "dnd.dev"]}
