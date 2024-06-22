@@ -14,7 +14,6 @@
      c)))
 
 (defmulti render identity)
-(defmethod render :default [_]
-  [:h1 "Four-Oh-Four – Not Found"])
+(defmethod render :default [_] [:h1 "404 – Not Found"])
 
 (defn default [] (render @current))

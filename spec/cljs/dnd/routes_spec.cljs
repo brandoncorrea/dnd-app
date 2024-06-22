@@ -12,14 +12,14 @@
           (secretary/reset-routes!)
           (sut/defroutes))
 
-  (it-routes "/" :home)
+  (it-routes "/dnd-app" :home)
 
   (context "sandbox"
     (before (reset! config/environment "development")
             (sut/defroutes))
     (after (reset! config/environment nil))
 
-    (it-routes "/sandbox" :sandbox)
-    (it-routes "/sandbox/home" :sandbox/home)
+    (it-routes "/dnd-app/sandbox" :sandbox)
+    (it-routes "/dnd-app/sandbox/home" :sandbox/home)
     )
   )
