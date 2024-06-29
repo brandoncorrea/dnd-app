@@ -10,7 +10,7 @@
 (defn sh [& args]
   (println (:out (apply shell/sh args))))
 
-(def aliases {"stage" :test})
+(def aliases {"stage" ":test"})
 
 (defn- service-str [env]
   (-> (slurp "./bin/dnd.service")
