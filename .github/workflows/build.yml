@@ -59,6 +59,7 @@ jobs:
           REMOTE_USER: ${{ secrets.USER }}
         run: |
           ssh -T $REMOTE_USER@$REMOTE_HOST << 'EOF'
+            echo $REPO_URL
             git clone $REPO_URL
             cd dnd-app
             # Optionally, list files to verify the clone
