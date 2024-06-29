@@ -69,10 +69,13 @@ jobs:
           EOF
 
       - name: Install Secrets
+        env:
+          ME_ENV=${{ github.environment }}
         run: |
+          echo "ENV=$ME_ENV"
           ssh -T $REMOTE_USER@$REMOTE_HOST << 'EOF'
             cd dnd
-            echo "ME_ENV=${{ github.environment }}" >> .env
+            echo "ME_ENV=$ME_ENV" >> .env
             echo "HOSTNAME=${{ secrets.HOSTNAME }}" >> .env
           EOF
 
