@@ -19,6 +19,7 @@
 
 (defn -main []
   (let [env (env/env "ME_ENV")]
+    (println "Installing Service:" env)
     (cljs/-main "once")
     (css/-main "once")
     (install-service! env)))
