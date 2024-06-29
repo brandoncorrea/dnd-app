@@ -65,6 +65,7 @@ jobs:
             cd dnd
 
             echo "ME_ENV=${{ secrets.ME_ENV }}" >> .env
+            echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
             echo "HOSTNAME=${{ secrets.HOSTNAME }}" >> .env
 
             clojure -M:test:cljs once

@@ -9,7 +9,6 @@
 (defn- service-str [env]
   (let [alias (when (= "stage" env) ":test")]
     (-> (slurp "./bin/dnd.service")
-        (str/replace "<:env>" env)
         (str/replace "<:alias>" alias))))
 
 (defn -main []
