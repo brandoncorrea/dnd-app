@@ -1,23 +1,17 @@
-(ns dnd.install
+(ns dnd.deploy.install
   (:require [c3kit.apron.env :as env]
             [c3kit.scaffold.cljs :as cljs]
             [c3kit.scaffold.css :as css]
-            [clojure.java.shell :as shell]
-            [clojure.string :as str]))
-
-(def environment (env/env "ME_ENV"))
-
-(defn sh [& args]
-  (println (:out (apply shell/sh args))))
-
-(def aliases {"stage" ":test"})
+            [clojure.string :as str]
+            [dnd.deploy.core :refer :all]))
 
 (defn- service-str [env]
-  (-> (slurp "./bin/dnd.service")
-      (str/replace "<:env>" env)
-      (str/replace "<:alias>" (get aliases env))))
+  (let [alias (when (= "stage" env) ":test")]
+    (-> (slurp "./bin/dnd.service")
+        (str/replace "<:env>" env)
+        (str/replace "<:alias>" alias))))
 
-(defn- service [env]
+(defn- install-service! [env]
   (spit "dnd.service" (service-str env))
   (sh "sudo mv dnd.service /etc/systemd/system/dnd.service")
   (sh "sudo systemctl daemon-reload")
@@ -27,4 +21,4 @@
   (let [env (env/env "ME_ENV")]
     (cljs/-main "once")
     (css/-main "once")
-    (service env)))
+    (install-service! env)))

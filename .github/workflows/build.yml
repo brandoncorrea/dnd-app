@@ -68,17 +68,10 @@ jobs:
             git clone "${{ github.server_url }}/${{ github.repository }}" dnd
           EOF
 
-      - name: Install Secrets
-        run: |
-          ssh -T $REMOTE_USER@$REMOTE_HOST << 'EOF'
-            cd dnd
-            echo "ME_ENV=${{ secrets.ME_ENV }}" >> .env
-            echo "HOSTNAME=${{ secrets.HOSTNAME }}" >> .env
-          EOF
-
       - name: Install Service
         run: |
           ssh -T $REMOTE_USER@$REMOTE_HOST << 'EOF'
             cd dnd
+            clojure -M:secrets
             clojure -M:test:install
           EOF

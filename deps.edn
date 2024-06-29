@@ -24,6 +24,7 @@
              :dev-    {:main-opts ["-m" "dnd.dev" "cljs" "css"]}
              :antq    {:deps      {com.github.liquidz/antq {:mvn/version "2.8.1201"}}
                        :main-opts ["-m" "antq.core"]}
-             :install {:main-opts ["-m" "dnd.install"]}
+             :install {:main-opts ["-m" "dnd.deploy.install"]}
+             :secrets {:main-opts ["-m" "dnd.deploy.secrets"]}
              }
  }
