@@ -58,8 +58,11 @@ jobs:
           REMOTE_USER: ${{ secrets.USER }}
         run: |
           ssh -T $REMOTE_USER@$REMOTE_HOST << 'EOF'
+            sudo systemctl stop dnd
+            rm -rf dnd
             git clone https://github.com/brandoncorrea/dnd-app dnd
             cd dnd
+            echo "HOSTNAME=${{ secrets.HOSTNAME }}" >> .env
             ME_ENV=stage clojure -M:test:cljs once
             ME_ENV=stage clojure -M:test:css once
             sudo cp bin/stage.service /etc/systemd/system/dnd.service
