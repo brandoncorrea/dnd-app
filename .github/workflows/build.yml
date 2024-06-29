@@ -79,5 +79,6 @@ jobs:
       - name: Install Service
         run: |
           ssh -T $REMOTE_USER@$REMOTE_HOST << 'EOF'
+            cd dnd
             clojure -M:test:install
           EOF
