@@ -24,6 +24,16 @@
                   :specs          true
                   :verbose        false
                   }
+ :stage          {
+                  :cache-analysis false
+                  :optimizations  :advanced
+                  :output-dir     "resources/public/cljs/"
+                  :output-to      "resources/public/cljs/dnd.js"
+                  :pretty-print   false
+                  :sources        ["src/cljc" "src/cljs"]
+                  :specs          false
+                  :verbose        false
+                  }
  :production     {
                   :cache-analysis false
                   :optimizations  :advanced

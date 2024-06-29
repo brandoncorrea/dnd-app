@@ -9,6 +9,11 @@
    :log-level  :trace
    :jwt-secret "secret"})
 
+(def stage
+  {:host       "FIXME"
+   :log-level  :trace
+   :jwt-secret (env/env "JWT_SECRET")})
+
 (def production
   {:host       "FIXME"
    :log-level  :trace
@@ -19,6 +24,7 @@
 (defn select-env [environment]
   (case environment
     "production" production
+    "stage" stage
     development))
 
 (def env (select-env environment))
