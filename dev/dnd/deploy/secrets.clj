@@ -4,5 +4,6 @@
 
 (defn -main []
   (println "Installing Secrets")
+  (spit ".env" "")
   (doseq [k #{"ME_ENV" "HOSTNAME"}]
-    (sh (ccc/->inspect (str "echo \"" k "=${{ secrets." k " }}\" >> .env")))))
+    (sh (str "echo \"" k "=${{ secrets." k " }}\" >> .env"))))
