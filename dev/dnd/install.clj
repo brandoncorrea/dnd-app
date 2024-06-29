@@ -16,7 +16,7 @@
   (println "Installing Service")
   (let [env (env/env! "ME_ENV")]
     (spit "dnd.service" (service-str env))
-    (sh "sudo mv -f dnd.service /etc/systemd/system")
+    (sh "sudo mv -f dnd.service /etc/systemd/system/dnd.service")
     (sh "sudo systemctl daemon-reload")
     (sh "sudo systemctl start dnd")
     (System/exit 0)))
