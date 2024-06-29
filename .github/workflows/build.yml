@@ -6,15 +6,6 @@ on:
   pull_request:
     branches: [ master ]
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -39,8 +30,26 @@ jobs:
       - name: Install Clojure CLI
         run: curl -O https://download.clojure.org/install/linux-install-1.11.1.1119.sh && chmod +x linux-install-1.11.1.1119.sh && sudo ./linux-install-1.11.1.1119.sh
 
+      - name: Run ClojureScript Tests
+        run: ME_ENV=ci clojure -M:test:cljs once
+
       - name: Run Clojure Tests
         run: clojure -M:test:spec
 
-      - name: Run ClojureScript Tests
-        run: ME_ENV=ci clojure -M:test:cljs once
+      - name: Set up SSH key
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.PRIVATE_KEY }}
+
+      - name: Clone repository on remote machine
+        env:
+          REPO_URL: https://github.com/${{ github.repository }}
+          REMOTE_HOST: ${{ secrets.HOSTNAME }}
+          REMOTE_USER: ${{ secrets.USER }}
+        run: |
+          ssh $REMOTE_USER@$REMOTE_HOST << 'EOF'
+            git clone $REPO_URL
+            cd dnd-app
+            # Optionally, list files to verify the clone
+            ls -la
+          EOF

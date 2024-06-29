@@ -12,7 +12,7 @@
                                   speclj/speclj                  {:mvn/version "3.4.8"}
                                   org.clojure/clojurescript      {:mvn/version "1.11.132"}
                                   venantius/accountant           {:mvn/version "0.2.5"}
-                                  com.cleancoders.c3kit/scaffold {:mvn/version "2.0.3"}
+                                  com.cleancoders.c3kit/scaffold {:mvn/version "2.0.4"}
                                   clj-commons/secretary          {:mvn/version "1.2.4"}
                                   }
                     :extra-paths ["spec/clj" "spec/cljc" "spec/cljs"]}
