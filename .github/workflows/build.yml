@@ -70,7 +70,7 @@ jobs:
 
       - name: Install Secrets
         env:
-          ME_ENV=${{ github.environment }}
+          ME_ENV: ${{ github.environment }}
         run: |
           echo "ENV=$ME_ENV"
           ssh -T $REMOTE_USER@$REMOTE_HOST << 'EOF'
