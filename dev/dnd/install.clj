@@ -15,14 +15,15 @@
         (str/replace "<:alias>" alias))))
 
 (defn- install-service! [env]
+  (println "Installing Service")
   (spit "dnd.service" (service-str env))
-  (sh "sudo mv dnd.service /etc/systemd/system/dnd.service")
+  (sh "sudo mv dnd.service /etc/systemd/system")
   (sh "sudo systemctl daemon-reload")
   (sh "sudo systemctl start dnd"))
 
 (defn -main []
   (let [env (env/env "ME_ENV")]
-    (println "Installing Service:" env)
+    (println "Installing Application:" env)
     (cljs/-main "once")
     (css/-main "once")
     (install-service! env)
