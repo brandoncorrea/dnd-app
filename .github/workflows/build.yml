@@ -62,7 +62,7 @@ jobs:
             cd dnd
             ME_ENV=stage clojure -M:test:cljs once
             ME_ENV=stage clojure -M:test:css once
-            cp bin/stage.service /etc/systemd/system/dnd.service
+            sudo cp bin/stage.service /etc/systemd/system/dnd.service
             sudo systemctl daemon-reload
             sudo systemctl start dnd
           EOF
