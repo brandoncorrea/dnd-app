@@ -54,13 +54,11 @@ jobs:
 
       - name: Clone repository on remote machine
         env:
-          REPO_URL: https://github.com/${{ github.repository }}
           REMOTE_HOST: ${{ secrets.HOSTNAME }}
           REMOTE_USER: ${{ secrets.USER }}
         run: |
           ssh -T $REMOTE_USER@$REMOTE_HOST << 'EOF'
-            echo $REPO_URL
-            git clone $REPO_URL
+            git clone https://github.com/brandoncorrea/dnd-app
             cd dnd-app
             # Optionally, list files to verify the clone
             ls -la
