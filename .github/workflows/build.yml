@@ -61,23 +61,15 @@ jobs:
             sudo systemctl stop dnd
           EOF
 
-      - name: Inspect
-        run: |
-          echo "${{ github.server_url }}/${{ github.repository }}"
-
       - name: Clone Repository
         run: |
           ssh -T $REMOTE_USER@$REMOTE_HOST << 'EOF'
             rm -rf dnd
-            echo "Repository: ${{ github.server_url }}/${{ github.repository }}"
             git clone "${{ github.server_url }}/${{ github.repository }}" dnd
           EOF
 
       - name: Install Secrets
-        env:
-          ME_ENV: ${{ github.environment }}
         run: |
-          echo "ENV=$ME_ENV"
           ssh -T $REMOTE_USER@$REMOTE_HOST << 'EOF'
             cd dnd
             echo "ME_ENV=${{ secrets.ME_ENV }}" >> .env
@@ -85,11 +77,4 @@ jobs:
           EOF
 
       - name: Install Service
-        run: |
-          ssh -T $REMOTE_USER@$REMOTE_HOST << 'EOF'
-            clojure -M:test:cljs once
-            clojure -M:test:css once
-            sudo cp bin/stage.service /etc/systemd/system/dnd.service
-            sudo systemctl daemon-reload
-            sudo systemctl start dnd
-          EOF
+        run: clojure -M:test:install
