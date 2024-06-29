@@ -69,7 +69,8 @@ jobs:
         run: |
           ssh -T $REMOTE_USER@$REMOTE_HOST << 'EOF'
             rm -rf dnd
-            git clone https://github.com/brandoncorrea/dnd-app dnd
+            echo "Repository: ${{ github.server_url }}/${{ github.repository }}"
+            git clone "${{ github.server_url }}/${{ github.repository }}" dnd
           EOF
 
       - name: Install Secrets
