@@ -61,6 +61,10 @@ jobs:
             sudo systemctl stop dnd
           EOF
 
+      - name: Inspect
+        run: |
+          echo "${{ github.server_url }}/${{ github.repository }}"
+
       - name: Clone Repository
         run: |
           ssh -T $REMOTE_USER@$REMOTE_HOST << 'EOF'
@@ -75,7 +79,7 @@ jobs:
           echo "ENV=$ME_ENV"
           ssh -T $REMOTE_USER@$REMOTE_HOST << 'EOF'
             cd dnd
-            echo "ME_ENV=$ME_ENV" >> .env
+            echo "ME_ENV=${{ secrets.ME_ENV }}" >> .env
             echo "HOSTNAME=${{ secrets.HOSTNAME }}" >> .env
           EOF
 
