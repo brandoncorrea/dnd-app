@@ -1,9 +1,12 @@
-(ns dnd.deploy.install
+(ns dnd.install
   (:require [c3kit.apron.env :as env]
             [c3kit.scaffold.cljs :as cljs]
             [c3kit.scaffold.css :as css]
-            [clojure.string :as str]
-            [dnd.deploy.core :refer :all]))
+            [clojure.java.shell :as shell]
+            [clojure.string :as str]))
+
+(defn sh [& args]
+  (println (:out (apply shell/sh args))))
 
 (defn- service-str [env]
   (let [alias (when (= "stage" env) ":test")]

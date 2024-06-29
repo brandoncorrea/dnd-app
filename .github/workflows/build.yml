@@ -55,23 +55,17 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.PRIVATE_KEY }}
 
-      - name: Stop Service
-        run: |
-          ssh -T $REMOTE_USER@$REMOTE_HOST << 'EOF'
-            sudo systemctl stop dnd
-          EOF
-
-      - name: Clone Repository
-        run: |
-          ssh -T $REMOTE_USER@$REMOTE_HOST << 'EOF'
-            rm -rf dnd
-            git clone "${{ github.server_url }}/${{ github.repository }}" dnd
-          EOF
-
       - name: Install Service
         run: |
           ssh -T $REMOTE_USER@$REMOTE_HOST << 'EOF'
+            sudo systemctl stop dnd
+
+            rm -rf dnd
+            git clone "${{ github.server_url }}/${{ github.repository }}" dnd
             cd dnd
-            clojure -M:secrets
+
+            echo "ME_ENV=${{ secrets.ME_ENV }}" >> .env
+            echo "HOSTNAME=${{ secrets.HOSTNAME }}" >> .env
+
             clojure -M:test:install
           EOF
