@@ -67,5 +67,7 @@ jobs:
             echo "ME_ENV=${{ secrets.ME_ENV }}" >> .env
             echo "HOSTNAME=${{ secrets.HOSTNAME }}" >> .env
 
+            clojure -M:test:cljs once
+            clojure -M:test:css once
             clojure -M:test:install
           EOF
