@@ -17,6 +17,7 @@
 (defn- install-service! [env]
   (println "Installing Service")
   (spit "dnd.service" (service-str env))
+  (sh "sudo rm /etc/systemd/system/dnd.service")
   (sh "sudo mv dnd.service /etc/systemd/system")
   (sh "sudo systemctl daemon-reload")
   (sh "sudo systemctl start dnd"))

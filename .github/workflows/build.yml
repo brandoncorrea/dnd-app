@@ -64,8 +64,6 @@ jobs:
             git clone "${{ github.server_url }}/${{ github.repository }}" dnd
             cd dnd
 
-            echo "ME_ENV=${{ secrets.ME_ENV }}" >> .env
-            echo "HOSTNAME=${{ secrets.HOSTNAME }}" >> .env
-
+            ./bin/install-secrets
             clojure -M:test:install
           EOF
