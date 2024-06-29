@@ -1,9 +1,11 @@
 (ns dnd.deploy.secrets
-  (:require [c3kit.apron.corec :as ccc]
-            [dnd.deploy.core :refer :all]))
+  (:require [dnd.deploy.core :refer :all]))
+
+(defn export-key! [k]
+  (sh "sh" "-c" (str "echo \"" k "=${{ secrets." k " }}\" >> .env")))
 
 (defn -main []
   (println "Installing Secrets")
   (spit ".env" "")
-  (doseq [k #{"ME_ENV" "HOSTNAME"}]
-    (sh (str "echo \"" k "=${{ secrets." k " }}\" >> .env"))))
+  (run! export-key! #{"ME_ENV" "HOSTNAME"})
+  (System/exit 0))

@@ -22,4 +22,5 @@
     (println "Installing Service:" env)
     (cljs/-main "once")
     (css/-main "once")
-    (install-service! env)))
+    (install-service! env)
+    (System/exit 0)))
