@@ -36,9 +36,9 @@ jobs:
       - name: Run Clojure Tests
         run: clojure -M:test:spec
 
-  deploy:
+  deploy-stage:
     runs-on: ubuntu-latest
-#    needs: test
+    #    needs: test
     environment: stage
 
     steps:
@@ -58,8 +58,11 @@ jobs:
           REMOTE_USER: ${{ secrets.USER }}
         run: |
           ssh -T $REMOTE_USER@$REMOTE_HOST << 'EOF'
-            git clone https://github.com/brandoncorrea/dnd-app
-            cd dnd-app
-            # Optionally, list files to verify the clone
-            ls -la
+            git clone https://github.com/brandoncorrea/dnd-app dnd
+            cd dnd
+            ME_ENV=stage clojure -M:test:cljs once
+            ME_ENV=stage clojure -M:test:css once
+            cp bin/stage.service /etc/systemd/system/dnd.service
+            sudo systemctl daemon-reload
+            sudo systemctl start dnd
           EOF

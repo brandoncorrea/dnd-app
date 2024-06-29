@@ -1,0 +1,14 @@
+[Unit]
+Description=D&D Website
+
+[Service]
+Type=simple
+Restart=on-failure
+RestartSec=5
+User=ubuntu
+WorkingDirectory=/home/ubuntu/dnd/
+Environment=ME_ENV=production
+ExecStart=/bin/bash -ce "exec /usr/local/bin/clj -M:server >> /home/ubuntu/dnd/log.txt 2>&1"
+
+[Install]
+WantedBy=multi-user.target
