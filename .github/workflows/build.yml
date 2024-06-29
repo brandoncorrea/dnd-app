@@ -42,6 +42,9 @@ jobs:
     environment: stage
 
     steps:
+      - name: Add remote host to known_hosts
+        run: ssh-keyscan -H ${{ secrets.HOSTNAME }} >> ~/.ssh/known_hosts
+
       - name: Set up SSH key
         uses: webfactory/ssh-agent@v0.9.0
         with:
@@ -53,7 +56,7 @@ jobs:
           REMOTE_HOST: ${{ secrets.HOSTNAME }}
           REMOTE_USER: ${{ secrets.USER }}
         run: |
-          ssh $REMOTE_USER@$REMOTE_HOST << 'EOF'
+          ssh -T $REMOTE_USER@$REMOTE_HOST << 'EOF'
             git clone $REPO_URL
             cd dnd-app
             # Optionally, list files to verify the clone
