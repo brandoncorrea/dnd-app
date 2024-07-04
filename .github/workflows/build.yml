@@ -68,10 +68,9 @@ jobs:
             echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
             echo "HOSTNAME=${{ secrets.HOSTNAME }}" >> .env
 
-            ./bin/nginx
-
             clojure -M:test:cljs once
             clojure -M:test:css once
             clojure -M:test:install
 
+            ./bin/nginx
           EOF
