@@ -1,0 +1,5 @@
+#! /bin/sh
+
+sudo mv -f ./resources/config/site.conf /etc/nginx/sites-available/site.conf
+sudo ln -s /etc/nginx/sites-available/site.conf /etc/nginx/sites-enabled/
+sudo systemctl reload nginx

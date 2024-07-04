@@ -71,4 +71,6 @@ jobs:
             clojure -M:test:cljs once
             clojure -M:test:css once
             clojure -M:test:install
+
+            ./bin/nginx
           EOF
