@@ -58,12 +58,18 @@ jobs:
       - name: Install Service
         run: |
           ssh -T $REMOTE_USER@$REMOTE_HOST << 'EOF'
+            echo "Stopping D&D Service"
             sudo systemctl stop dnd
+
+            echo "Updating Package Manager"
+            sudo apt-get update
+            sudo apt-get upgrade
 
             rm -rf dnd
             git clone "${{ github.server_url }}/${{ github.repository }}" dnd
             cd dnd
 
+            echo "Installing Secrets"
             echo "ME_ENV=${{ secrets.ME_ENV }}" >> .env
             echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
             echo "HOSTNAME=${{ secrets.HOSTNAME }}" >> .env

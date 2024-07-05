@@ -1,5 +1,11 @@
 #! /bin/sh
 
+echo "Installing Nginx"
+sudo apt-get install nginx
+
+echo "Installing site.conf"
 sudo mv -f ./resources/config/site.conf /etc/nginx/sites-available/site.conf
 sudo ln -s /etc/nginx/sites-available/site.conf /etc/nginx/sites-enabled/
+
+echo "Reloading Nginx"
 sudo systemctl reload nginx
