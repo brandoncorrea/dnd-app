@@ -58,7 +58,11 @@ jobs:
       - name: Install Service
         run: |
           ssh -T $REMOTE_USER@$REMOTE_HOST << 'EOF'
-            ./bin/init "${{ github.server_url }}/${{ github.repository }}"
+            sudo systemctl stop dnd
+
+            rm -rf dnd
+            git clone "${{ github.server_url }}/${{ github.repository }}" dnd
+            cd dnd
 
             echo "ME_ENV=${{ secrets.ME_ENV }}" >> .env
             echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
@@ -67,4 +71,6 @@ jobs:
             clojure -M:test:cljs once
             clojure -M:test:css once
             clojure -M:test:install
+
+            ./bin/nginx
           EOF
