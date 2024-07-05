@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - production
 
 jobs:
   test:
@@ -35,10 +36,10 @@ jobs:
       - name: Run Clojure Tests
         run: clojure -M:test:spec
 
-  deploy-stage:
+  deploy:
     runs-on: ubuntu-latest
-    #    needs: test
-    environment: stage
+    needs: test
+    environment: ${{ github.ref == 'refs/heads/production' && 'production' || 'stage' }}
 
     concurrency:
       group: deploy-ec2-${{ github.ref }}
