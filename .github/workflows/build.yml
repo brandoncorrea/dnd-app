@@ -55,14 +55,14 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      - name: Get old instance ID
+      - name: Get old instance IDs
         id: get_old_instance_id
         run: |
-          OLD_INSTANCE_ID=$(aws ec2 describe-instances \
+          OLD_INSTANCE_IDS=$(aws ec2 describe-instances \
             --filters "Name=tag:app,Values=dnd" "Name=tag:env,Values=stage" "Name=instance-state-name,Values=pending,running,shutting-down,stopping,stopped" \
-            --query 'Reservations[0].Instances[0].InstanceId' \
+            --query 'Reservations[*].Instances[*].InstanceId' \
             --output text)
-          echo "OLD_INSTANCE_ID=$OLD_INSTANCE_ID" >> $GITHUB_ENV
+          echo "OLD_INSTANCE_IDS=$OLD_INSTANCE_IDS" >> $GITHUB_ENV
 
       - name: Deploy new EC2 instance
         id: deploy_new_instance
@@ -117,11 +117,12 @@ jobs:
             ./bin/nginx
           EOF
 
-      - name: Delete old instance if one exists
+      - name: Delete old instances if they exist
         run: |
-          if [ -n "${{ env.OLD_INSTANCE_ID }}" ]; then
-            aws ec2 terminate-instances --instance-ids ${{ env.OLD_INSTANCE_ID }}
-          fi
+          echo "${{ env.OLD_INSTANCE_IDS }}"
+#          for INSTANCE_ID in ${{ env.OLD_INSTANCE_IDS }}; do
+#            aws ec2 terminate-instances --instance-ids $INSTANCE_ID
+#          done
 
       - name: Cleanup new instance if job fails
         if: failure()
