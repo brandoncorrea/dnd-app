@@ -78,21 +78,28 @@ jobs:
             --output text)
           echo "NEW_INSTANCE_ID=$NEW_INSTANCE_ID" >> $GITHUB_ENV
 
+      - name: Fetch Public IP
+        run: |
+          PUBLIC_IP=$(aws ec2 describe-instances --instance-ids ${{ env.NEW_INSTANCE_ID }} --query 'Reservations[0].Instances[0].PublicIpAddress' --output text)
+          echo "PUBLIC_IP=$PUBLIC_IP" >> $GITHUB_ENV
+
       - name: Inspect Variables
         run: |
           echo "OLD_INSTANCE_ID=${{ env.OLD_INSTANCE_ID }}"
           echo "NEW_INSTANCE_ID=${{ env.NEW_INSTANCE_ID }}"
+          echo "PUBLIC_IP=${{ env.PUBLIC_IP }}"
 
       - name: Set up SSH key
         uses: webfactory/ssh-agent@v0.9.0
         with:
           ssh-private-key: ${{ secrets.PRIVATE_KEY }}
 
+      - name: Scan Public IP
+        run: ssh-keyscan -H ${{ env.PUBLIC_IP }} >> ~/.ssh/known_hosts
+
       - name: Install Service
         run: |
-          PUBLIC_IP=$(aws ec2 describe-instances --instance-ids ${{ env.NEW_INSTANCE_ID }} --query 'Reservations[0].Instances[0].PublicIpAddress' --output text)
-          ssh-keyscan -H $PUBLIC_IP >> ~/.ssh/known_hosts
-          ssh -T ${{ secrets.USER }}@$PUBLIC_IP << 'EOF'
+          ssh -T ${{ secrets.USER }}@${{ env.PUBLIC_IP }} << 'EOF'
             echo "Updating Package Manager"
             sudo apt-get update
             echo "Upgrading Package Manager"
