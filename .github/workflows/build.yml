@@ -70,7 +70,7 @@ jobs:
           NEW_INSTANCE_ID=$(aws ec2 run-instances \
             --image-id ami-0a10fa42b2aaabc13 \
             --count 1 \
-            --instance-type t2.micro \
+            --instance-type t2.small \
             --key-name ${{ secrets.PRIVATE_KEY_NAME }} \
             --security-group-ids ${{ secrets.SECURITY_GROUP_IDS }} \
             --tag-specifications 'ResourceType=instance,Tags=[{Key=app,Value=dnd},{Key=env,Value=stage}]' \
@@ -116,3 +116,16 @@ jobs:
 
             ./bin/nginx
           EOF
+
+      - name: Delete old instance if one exists
+        run: |
+          if [ -n "${{ env.OLD_INSTANCE_ID }}" ]; then
+            aws ec2 terminate-instances --instance-ids ${{ env.OLD_INSTANCE_ID }}
+          fi
+
+      - name: Cleanup new instance if job fails
+        if: failure()
+        run: |
+          if [ -n "${{ env.NEW_INSTANCE_ID }}" ]; then
+            aws ec2 terminate-instances --instance-ids ${{ env.NEW_INSTANCE_ID }}
+          fi
