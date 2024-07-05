@@ -4,20 +4,18 @@
 
 (def environment (app/find-env "me.env" "ME_ENV"))
 
+(def base
+  {:host       (env/env "HOST")
+   :log-level  :trace
+   :jwt-secret (env/env "JWT_SECRET")})
+
 (def development
   {:host       "http://localhost:8282"
    :log-level  :trace
    :jwt-secret "secret"})
 
-(def stage
-  {:host       "FIXME"
-   :log-level  :trace
-   :jwt-secret (env/env "JWT_SECRET")})
-
-(def production
-  {:host       "FIXME"
-   :log-level  :trace
-   :jwt-secret (env/env "JWT_SECRET")})
+(def stage base)
+(def production base)
 
 (def development? (= "development" environment))
 

@@ -88,7 +88,6 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.PRIVATE_KEY }}
 
-
       - name: Prep SSH
         run: |
           PUBLIC_IP=$(aws ec2 describe-instances --instance-ids ${{ env.NEW_INSTANCE_ID }} --query 'Reservations[0].Instances[0].PublicIpAddress' --output text)
@@ -99,9 +98,9 @@ jobs:
         run: |
           ssh -T ${{ secrets.USER }}@${{ env.PUBLIC_IP }} << 'EOF'
             echo "Updating Package Manager"
-            sudo apt-get update
+            sudo apt-get update -y
             echo "Upgrading Package Manager"
-            sudo apt-get upgrade
+            sudo apt-get upgrade -y
 
             git clone "${{ github.server_url }}/${{ github.repository }}" dnd
             cd dnd
@@ -109,7 +108,7 @@ jobs:
             echo "Installing Secrets"
             echo "ME_ENV=${{ secrets.ME_ENV }}" >> .env
             echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
-            echo "HOSTNAME=${{ secrets.HOSTNAME }}" >> .env
+            echo "HOST=${{ secrets.HOST }}" >> .env
 
             clojure -M:test:cljs once
             clojure -M:test:css once
