@@ -1,0 +1,24 @@
+#! /bin/sh
+
+# No need to do this when new instances are created
+echo "Stopping D&D Service"
+sudo systemctl stop dnd
+
+echo "Updating Package Manager"
+sudo apt-get update
+sudo apt-get upgrade
+
+echo "Cloning Repository"
+rm -rf dnd # No need to do this when new instances are created
+git clone "$1" dnd
+cd dnd
+
+echo "Installing Nginx"
+sudo apt-get install nginx
+
+echo "Installing site.conf"
+sudo mv -f ./resources/config/site.conf /etc/nginx/sites-available/site.conf
+sudo ln -s /etc/nginx/sites-available/site.conf /etc/nginx/sites-enabled/
+
+echo "Reloading Nginx"
+sudo systemctl reload nginx
