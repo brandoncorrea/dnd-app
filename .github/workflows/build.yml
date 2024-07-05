@@ -42,10 +42,11 @@ jobs:
     #    needs: test
     environment: stage
 
-    steps:
-      - name: Inspect github.ref
-        run: echo "github.ref=${{ github.ref }}"
+    concurrency:
+      group: deploy-ec2-${{ github.ref }}
+      cancel-in-progress: true
 
+    steps:
       - name: Install AWS CLI
         run: |
           sudo apt-get update
