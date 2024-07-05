@@ -71,7 +71,7 @@ jobs:
         id: deploy_new_instance
         run: |
           NEW_INSTANCE_ID=$(aws ec2 run-instances \
-            --image-id ami-0a10fa42b2aaabc13 \
+            --image-id ami-04a81a99f5ec58529 \ # Ubuntu 24.04 Base Image
             --count 1 \
             --instance-type t2.small \
             --key-name ${{ secrets.PRIVATE_KEY_NAME }} \
@@ -100,13 +100,10 @@ jobs:
       - name: Install Service
         run: |
           ssh -T ${{ secrets.USER }}@${{ env.PUBLIC_IP }} << 'EOF'
-            echo "Updating Package Manager"
-            sudo apt-get update -y
-            echo "Upgrading Package Manager"
-            sudo apt-get upgrade -y
-
             git clone "${{ github.server_url }}/${{ github.repository }}" dnd
             cd dnd
+
+            ./bin/prep
 
             echo "Installing Secrets"
             echo "ME_ENV=${{ secrets.ME_ENV }}" >> .env
