@@ -61,8 +61,7 @@ jobs:
           OLD_INSTANCE_IDS=$(aws ec2 describe-instances \
             --filters "Name=tag:app,Values=dnd" "Name=tag:env,Values=${{ secrets.ME_ENV }}" "Name=instance-state-name,Values=pending,running,shutting-down,stopping,stopped" \
             --query 'Reservations[*].Instances[*].InstanceId' \
-            --output text)
-          echo "OLD_INSTANCE_IDS=$OLD_INSTANCE_IDS"
+            --output text | tr '\n' ' ')
           echo "OLD_INSTANCE_IDS=$OLD_INSTANCE_IDS" >> $GITHUB_ENV
 
       - name: Deploy new EC2 instance
