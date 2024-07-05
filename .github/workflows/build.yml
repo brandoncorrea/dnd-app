@@ -91,7 +91,7 @@ jobs:
       - name: Install Service
         run: |
           PUBLIC_IP=$(aws ec2 describe-instances --instance-ids ${{ env.NEW_INSTANCE_ID }} --query 'Reservations[0].Instances[0].PublicIpAddress' --output text)
-          ssh -T ${{ secrets.USER }}@${{ env.PUBLIC_IP }} << 'EOF'
+          ssh -T ${{ secrets.USER }}@$PUBLIC_IP << 'EOF'
             echo "Updating Package Manager"
             sudo apt-get update
             echo "Upgrading Package Manager"
