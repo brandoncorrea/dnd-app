@@ -59,9 +59,10 @@ jobs:
         id: get_old_instance_id
         run: |
           OLD_INSTANCE_IDS=$(aws ec2 describe-instances \
-            --filters "Name=tag:app,Values=dnd" "Name=tag:env,Values=stage" "Name=instance-state-name,Values=pending,running,shutting-down,stopping,stopped" \
+            --filters "Name=tag:app,Values=dnd" "Name=tag:env,Values=${{ secrets.ME_ENV }}" "Name=instance-state-name,Values=pending,running,shutting-down,stopping,stopped" \
             --query 'Reservations[*].Instances[*].InstanceId' \
             --output text)
+          echo "OLD_INSTANCE_IDS=$OLD_INSTANCE_IDS"
           echo "OLD_INSTANCE_IDS=$OLD_INSTANCE_IDS" >> $GITHUB_ENV
 
       - name: Deploy new EC2 instance
@@ -73,7 +74,7 @@ jobs:
             --instance-type t2.small \
             --key-name ${{ secrets.PRIVATE_KEY_NAME }} \
             --security-group-ids ${{ secrets.SECURITY_GROUP_IDS }} \
-            --tag-specifications 'ResourceType=instance,Tags=[{Key=app,Value=dnd},{Key=env,Value=stage}]' \
+            --tag-specifications 'ResourceType=instance,Tags=[{Key=app,Value=dnd},{Key=env,Value=${{ secrets.ME_ENV }}}]' \
             --query 'Instances[0].InstanceId' \
             --output text)
           echo "NEW_INSTANCE_ID=$NEW_INSTANCE_ID" >> $GITHUB_ENV
