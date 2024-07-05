@@ -118,11 +118,8 @@ jobs:
           EOF
 
       - name: Delete old instances if they exist
-        run: |
-          echo "${{ env.OLD_INSTANCE_IDS }}"
-#          for INSTANCE_ID in ${{ env.OLD_INSTANCE_IDS }}; do
-#            aws ec2 terminate-instances --instance-ids $INSTANCE_ID
-#          done
+        if: env.OLD_INSTANCE_IDS != ''
+        run: aws ec2 terminate-instances --instance-ids ${{ env.OLD_INSTANCE_IDS }}
 
       - name: Cleanup new instance if job fails
         if: failure()
