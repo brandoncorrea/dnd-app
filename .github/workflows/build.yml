@@ -63,6 +63,7 @@ jobs:
 
             echo "Updating Package Manager"
             sudo apt-get update
+            echo "Upgrading Package Manager"
             sudo apt-get upgrade
 
             rm -rf dnd
