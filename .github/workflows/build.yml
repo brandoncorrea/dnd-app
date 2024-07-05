@@ -70,8 +70,11 @@ jobs:
       - name: Deploy new EC2 instance
         id: deploy_new_instance
         run: |
+          # Ubuntu 24.04 Base Image
+          IMAGE_ID=ami-04a81a99f5ec58529
+
           NEW_INSTANCE_ID=$(aws ec2 run-instances \
-            --image-id ami-04a81a99f5ec58529 \ # Ubuntu 24.04 Base Image
+            --image-id $IMAGE_ID \
             --count 1 \
             --instance-type t2.small \
             --key-name ${{ secrets.PRIVATE_KEY_NAME }} \
