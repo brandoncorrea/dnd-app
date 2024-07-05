@@ -117,6 +117,14 @@ jobs:
             ./bin/nginx
           EOF
 
+      - name: Allocate Elastic IP Address
+        run: |
+          ALLOCATION_ID=$(aws ec2 describe-addresses \
+            --filters "Name=tag:app,Values=dnd" "Name=tag:env,Values=${{ secrets.ME_ENV }}" \
+            --query 'Addresses[0].AllocationId' \
+            --output text)
+          aws ec2 associate-address --instance-id ${{ env.NEW_INSTANCE_ID }} --allocation-id $ALLOCATION_ID
+
       - name: Delete old instances if they exist
         if: env.OLD_INSTANCE_IDS != ''
         run: aws ec2 terminate-instances --instance-ids ${{ env.OLD_INSTANCE_IDS }}
