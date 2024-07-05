@@ -107,6 +107,10 @@ jobs:
             cd dnd
 
             ./bin/prep
+          
+            echo "Installing SSL"
+            sudo echo "${{ secrets.SSL_CERTIFICATE }}" >> /etc/ssl/bwawan.com.crt
+            sudo echo "${{ secrets.SSL_PRIVATE_KEY }}" >> /etc/ssl/bwawan.com.key
 
             echo "Installing Secrets"
             echo "ME_ENV=${{ secrets.ME_ENV }}" >> .env
