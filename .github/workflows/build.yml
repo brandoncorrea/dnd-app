@@ -43,6 +43,9 @@ jobs:
     environment: stage
 
     steps:
+      - name: Inspect github.ref
+        run: echo "github.ref=${{ github.ref }}"
+
       - name: Install AWS CLI
         run: |
           sudo apt-get update
