@@ -77,7 +77,7 @@ jobs:
             --image-id $IMAGE_ID \
             --count 1 \
             --instance-type t2.small \
-            --key-name ${{ secrets.PRIVATE_KEY_NAME }} \
+            --key-name ${{ secrets.SSH_PRIVATE_KEY_NAME }} \
             --security-group-ids ${{ secrets.SECURITY_GROUP_IDS }} \
             --tag-specifications 'ResourceType=instance,Tags=[{Key=app,Value=dnd},{Key=env,Value=${{ secrets.ME_ENV }}}]' \
             --query 'Instances[0].InstanceId' \
@@ -92,7 +92,7 @@ jobs:
       - name: Set up SSH key
         uses: webfactory/ssh-agent@v0.9.0
         with:
-          ssh-private-key: ${{ secrets.PRIVATE_KEY }}
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
       - name: Prep SSH
         run: |
