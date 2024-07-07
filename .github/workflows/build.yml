@@ -115,7 +115,7 @@ jobs:
             echo "Installing Secrets"
             echo "ME_ENV=${{ vars.ME_ENV }}" >> .env
             echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
-            echo "HOST=${{ secrets.HOST }}" >> .env
+            echo "HOST=${{ vars.HOST }}" >> .env
 
             clojure -M:test:cljs once
             clojure -M:test:css once
