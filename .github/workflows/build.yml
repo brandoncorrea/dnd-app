@@ -116,7 +116,6 @@ jobs:
             echo "ME_ENV=${{ vars.ME_ENV }}" >> .env
             echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
             echo "DOMAIN=${{ vars.DOMAIN }}" >> .env
-            echo "TLS=${{ vars.TLS }}" >> .env
 
             clojure -M:test:cljs once
             clojure -M:test:css once
