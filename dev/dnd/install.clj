@@ -7,7 +7,7 @@
   (println (:out (apply shell/sh "sh" "-c" args))))
 
 (defn- service-str [env]
-  (let [alias (when (= "stage" env) ":test")]
+  (let [alias (if (= "stage" env) ":test" "")]
     (-> (slurp "./resources/config/dnd.service")
         (str/replace "<:alias>" alias))))
 

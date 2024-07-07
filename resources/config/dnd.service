@@ -7,7 +7,7 @@ Restart=on-failure
 RestartSec=5
 User=ubuntu
 WorkingDirectory=/home/ubuntu/dnd/
-ExecStart=/bin/bash -ce "exec /usr/local/bin/clj -M:run:<:alias> >> /home/ubuntu/dnd/log.txt 2>&1"
+ExecStart=/bin/bash -ce "exec /usr/local/bin/clj -M:run<:alias> >> /home/ubuntu/dnd/log.txt 2>&1"
 
 [Install]
 WantedBy=multi-user.target
