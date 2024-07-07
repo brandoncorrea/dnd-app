@@ -62,7 +62,7 @@ jobs:
         id: get_old_instance_id
         run: |
           OLD_INSTANCE_IDS=$(aws ec2 describe-instances \
-            --filters "Name=tag:app,Values=dnd" "Name=tag:env,Values=${{ env.ME_ENV }}" "Name=instance-state-name,Values=pending,running,shutting-down,stopping,stopped" \
+            --filters "Name=tag:app,Values=${{ vars.APP_NAME }}" "Name=tag:env,Values=${{ vars.ME_ENV }}" "Name=instance-state-name,Values=pending,running,shutting-down,stopping,stopped" \
             --query 'Reservations[*].Instances[*].InstanceId' \
             --output text | tr '\n' ' ')
           echo "OLD_INSTANCE_IDS=$OLD_INSTANCE_IDS" >> $GITHUB_ENV
@@ -79,7 +79,7 @@ jobs:
             --instance-type t2.small \
             --key-name ${{ secrets.SSH_PRIVATE_KEY_NAME }} \
             --security-group-ids ${{ secrets.SECURITY_GROUP_IDS }} \
-            --tag-specifications 'ResourceType=instance,Tags=[{Key=app,Value=dnd},{Key=env,Value=${{ env.ME_ENV }}}]' \
+            --tag-specifications 'ResourceType=instance,Tags=[{Key=app,Value=${{ vars.APP_NAME }}},{Key=env,Value=${{ vars.ME_ENV }}}]' \
             --query 'Instances[0].InstanceId' \
             --output text)
           echo "NEW_INSTANCE_ID=$NEW_INSTANCE_ID" >> $GITHUB_ENV
@@ -103,8 +103,8 @@ jobs:
       - name: Install Service
         run: |
           ssh -T ${{ secrets.USER }}@${{ env.PUBLIC_IP }} << 'EOF'
-            git clone "${{ github.server_url }}/${{ github.repository }}" dnd
-            cd dnd
+            git clone "${{ github.server_url }}/${{ github.repository }}" ${{ vars.APP_NAME }}
+            cd ${{ vars.APP_NAME }}
 
             ./bin/prep
           
@@ -113,7 +113,7 @@ jobs:
             sudo echo "${{ secrets.SSL_PRIVATE_KEY }}" | sudo tee -a /etc/ssl/bwawan.com.key > /dev/null
 
             echo "Installing Secrets"
-            echo "ME_ENV=${{ env.ME_ENV }}" >> .env
+            echo "ME_ENV=${{ vars.ME_ENV }}" >> .env
             echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
             echo "HOST=${{ secrets.HOST }}" >> .env
 
@@ -141,7 +141,7 @@ jobs:
       - name: Allocate Elastic IP Address
         run: |
           ALLOCATION_ID=$(aws ec2 describe-addresses \
-            --filters "Name=tag:app,Values=dnd" "Name=tag:env,Values=${{ env.ME_ENV }}" \
+            --filters "Name=tag:app,Values=${{ vars.APP_NAME }}" "Name=tag:env,Values=${{ vars.ME_ENV }}" \
             --query 'Addresses[0].AllocationId' \
             --output text)
           aws ec2 associate-address --instance-id ${{ env.NEW_INSTANCE_ID }} --allocation-id $ALLOCATION_ID
