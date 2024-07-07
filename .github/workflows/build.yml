@@ -102,7 +102,7 @@ jobs:
 
       - name: Install Service
         run: |
-          ssh -T ${{ secrets.USER }}@${{ env.PUBLIC_IP }} << 'EOF'
+          ssh -T ${{ secrets.SSH_USER }}@${{ env.PUBLIC_IP }} << 'EOF'
             git clone "${{ github.server_url }}/${{ github.repository }}" ${{ vars.APP_NAME }}
             cd ${{ vars.APP_NAME }}
 
