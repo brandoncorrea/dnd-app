@@ -22,16 +22,16 @@
   (println "Starting App")
   (sh "sudo systemctl start dnd"))
 
-(defn- site-str [host]
+(defn- site-str [domain]
   (-> (slurp "./resources/config/site.conf")
-      (str/replace "<:host>" host)))
+      (str/replace "<:domain>" domain)))
 
-(defn- install-site! [host]
+(defn- install-site! [domain]
   (println "Installing Nginx")
   (sh "sudo apt-get install -y nginx")
 
   (println "Installing site.conf")
-  (spit "site.conf" (site-str host))
+  (spit "site.conf" (site-str domain))
   (sh "sudo mv -f site.conf /etc/nginx/sites-available/site.conf")
   (sh "sudo ln -s /etc/nginx/sites-available/site.conf /etc/nginx/sites-enabled/")
 
@@ -39,8 +39,8 @@
   (sh "sudo systemctl reload nginx"))
 
 (defn -main []
-  (let [env  (env/env! "ME_ENV")
-        host (env/env! "HOST")]
+  (let [env    (env/env! "ME_ENV")
+        domain (env/env! "DOMAIN")]
     (install-service! env)
-    (install-site! host)
+    (install-site! domain)
     (System/exit 0)))

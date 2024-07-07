@@ -1,16 +1,19 @@
 (ns dnd.config
   (:require [c3kit.apron.app :as app]
-            [c3kit.apron.env :as env]))
+            [c3kit.apron.env :as env]
+            [c3kit.apron.schema :as schema]))
 
 (def environment (app/find-env "me.env" "ME_ENV"))
 
 (def base
-  {:host       (env/env "HOST")
+  {:domain     (env/env "DOMAIN")
+   :tls?       (schema/->boolean (env/env "TLS"))
    :log-level  :trace
    :jwt-secret (env/env "JWT_SECRET")})
 
 (def development
-  {:host       "http://localhost:8282"
+  {:domain     "http://localhost:8282"
+   :tls?       false
    :log-level  :trace
    :jwt-secret "secret"})
 
@@ -26,4 +29,4 @@
     development))
 
 (def env (select-env environment))
-(def host (:host env))
+(def host (str (if (:tls? env) "https://" "http://") (:domain env)))
