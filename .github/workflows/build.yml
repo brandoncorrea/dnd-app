@@ -8,22 +8,22 @@ on:
       - production
 
 jobs:
-#  test:
-#    runs-on: ubuntu-latest
-#
-#    steps:
-#      - uses: actions/checkout@v4
-#      - uses: brandoncorrea/clojure-base@v1
-#
-#      - name: Run ClojureScript Tests
-#        run: ME_ENV=ci clojure -M:test:cljs once
-#
-#      - name: Run Clojure Tests
-#        run: clojure -M:test:spec
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: brandoncorrea/clojure-base@v1
+
+      - name: Run ClojureScript Tests
+        run: ME_ENV=ci clojure -M:test:cljs once
+
+      - name: Run Clojure Tests
+        run: clojure -M:test:spec
 
   deploy:
     runs-on: ubuntu-latest
-#    needs: test
+    needs: test
     if: contains('stage production', github.ref_name)
     environment: ${{ github.ref_name }}
 
@@ -37,6 +37,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
+          # Ubuntu 24.04 Base Image
           aws-image-id: ami-04a81a99f5ec58529
           aws-instance-type: t2.small
           aws-security-group-ids: ${{ secrets.SECURITY_GROUP_IDS }}

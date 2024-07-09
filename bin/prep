@@ -1,7 +1,0 @@
-#! /bin/sh
-
-echo "Updating Package Manager"
-sudo apt-get update -y
-
-echo "Upgrading Package Manager"
-sudo apt-get upgrade -y
