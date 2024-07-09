@@ -45,7 +45,6 @@ jobs:
           aws-region: us-east-1
 
       - name: Get old instance IDs
-        id: get_old_instance_id
         run: |
           OLD_INSTANCE_IDS=$(aws ec2 describe-instances \
             --filters "Name=tag:app,Values=${{ vars.APP_NAME }}" "Name=tag:env,Values=${{ vars.ME_ENV }}" "Name=instance-state-name,Values=pending,running,shutting-down,stopping,stopped" \
@@ -54,7 +53,6 @@ jobs:
           echo "OLD_INSTANCE_IDS=$OLD_INSTANCE_IDS" >> $GITHUB_ENV
 
       - name: Deploy new EC2 instance
-        id: deploy_new_instance
         run: |
           # Ubuntu 24.04 Base Image
           IMAGE_ID=ami-04a81a99f5ec58529
