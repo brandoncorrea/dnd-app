@@ -8,14 +8,8 @@ else
   ALIAS=""
 fi
 
-declare -A REPLACEMENTS=(
-  ["<:alias>"]="$ALIAS"
-)
-
 echo "Building dnd.service"
-for key in "${!REPLACEMENTS[@]}"; do
-  sed -i "s/$key/${REPLACEMENTS[$key]}/g" ./bin/dnd.service
-done
+sed "s/<:alias>/$ALIAS/g" ./bin/dnd.service > ./bin/dnd.service
 
 echo "Installing site.conf"
 sudo mv -f ./bin/dnd.service /etc/systemd/system/dnd.service
