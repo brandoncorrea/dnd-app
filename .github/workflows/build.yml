@@ -44,11 +44,6 @@ jobs:
           app-name: ${{ vars.APP_NAME }}
           env-name: ${{ vars.ME_ENV }}
 
-      - name: Set up SSH key
-        uses: webfactory/ssh-agent@v0.9.0
-        with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-
       - name: Prep SSH
         run: |
           PUBLIC_IP=$(aws ec2 describe-instances --instance-ids ${{ env.EC2_NEW_INSTANCE_ID }} --query 'Reservations[0].Instances[0].PublicIpAddress' --output text)
@@ -56,8 +51,12 @@ jobs:
           ssh-keyscan -H $PUBLIC_IP >> ~/.ssh/known_hosts
 
       - name: Install Service
-        run: |
-          ssh -T ${{ secrets.SSH_USER }}@${{ env.PUBLIC_IP }} << 'EOF'
+        uses: D3rHase/ssh-command-action@v0.2.2
+        with:
+          host: ${{ env.PUBLIC_IP }}
+          user: ${{ secrets.SSH_USER }}
+          private_key: ${{ secrets.SSH_PRIVATE_KEY }}
+          command: |
             git clone "${{ github.server_url }}/${{ github.repository }}" ${{ vars.APP_NAME }}
             cd ${{ vars.APP_NAME }}
 
@@ -79,7 +78,6 @@ jobs:
 
             ./bin/install-service ${{ vars.ME_ENV }}
             ./bin/install-nginx ${{ vars.DOMAIN }}
-          EOF
 
       - name: Wait for instance to be ready
         uses: iFaxity/wait-on-action@v1.2.1
