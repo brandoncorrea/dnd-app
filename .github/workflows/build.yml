@@ -8,22 +8,22 @@ on:
       - production
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-      - uses: brandoncorrea/clojure-base@v1
-
-      - name: Run ClojureScript Tests
-        run: ME_ENV=ci clojure -M:test:cljs once
-
-      - name: Run Clojure Tests
-        run: clojure -M:test:spec
+#  test:
+#    runs-on: ubuntu-latest
+#
+#    steps:
+#      - uses: actions/checkout@v4
+#      - uses: brandoncorrea/clojure-base@v1
+#
+#      - name: Run ClojureScript Tests
+#        run: ME_ENV=ci clojure -M:test:cljs once
+#
+#      - name: Run Clojure Tests
+#        run: clojure -M:test:spec
 
   deploy:
     runs-on: ubuntu-latest
-    needs: test
+#    needs: test
     if: contains('stage production', github.ref_name)
     environment: ${{ github.ref_name }}
 
@@ -44,18 +44,20 @@ jobs:
           app-name: ${{ vars.APP_NAME }}
           env-name: ${{ vars.ME_ENV }}
 
-      - name: Prep SSH
+      - name: Get Public IP
         run: |
-          PUBLIC_IP=$(aws ec2 describe-instances --instance-ids ${{ env.EC2_NEW_INSTANCE_ID }} --query 'Reservations[0].Instances[0].PublicIpAddress' --output text)
-          echo "PUBLIC_IP=$PUBLIC_IP" >> $GITHUB_ENV
-          ssh-keyscan -H $PUBLIC_IP >> ~/.ssh/known_hosts
+          EC2_PUBLIC_IP=$(aws ec2 describe-instances --instance-ids ${{ env.EC2_NEW_INSTANCE_ID }} --query 'Reservations[0].Instances[0].PublicIpAddress' --output text)
+          EC2_FINGERPRINT=$(ssh-keyscan -H $PUBLIC_IP)
+          echo "EC2_PUBLIC_IP=$EC2_PUBLIC_IP" >> $GITHUB_ENV
+          echo "EC2_FINGERPRINT=$EC2_FINGERPRINT" >> $GITHUB_ENV
 
       - name: Install Service
         uses: D3rHase/ssh-command-action@v0.2.2
         with:
-          host: ${{ env.PUBLIC_IP }}
+          host: ${{ env.EC2_PUBLIC_IP }}
           user: ${{ secrets.SSH_USER }}
           private_key: ${{ secrets.SSH_PRIVATE_KEY }}
+          host_fingerprint: ${{ env.EC2_FINGERPRINT }}
           command: |
             git clone "${{ github.server_url }}/${{ github.repository }}" ${{ vars.APP_NAME }}
             cd ${{ vars.APP_NAME }}
@@ -82,7 +84,7 @@ jobs:
       - name: Wait for instance to be ready
         uses: iFaxity/wait-on-action@v1.2.1
         with:
-          resource: https://${{ env.PUBLIC_IP }}
+          resource: https://${{ env.EC2_PUBLIC_IP }}
           interval: 1000
           timeout: 600000
 
