@@ -60,7 +60,6 @@ jobs:
         run: |
           scp -r . ${{ secrets.SSH_USER }}@${{ env.PUBLIC_IP }}:~${{ vars.APP_NAME }}
           ssh -T ${{ secrets.SSH_USER }}@${{ env.PUBLIC_IP }} << 'EOF'
-#            git clone "${{ github.server_url }}/${{ github.repository }}" ${{ vars.APP_NAME }}
             cd ${{ vars.APP_NAME }}
 
             ./bin/prep
