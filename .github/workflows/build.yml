@@ -13,7 +13,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - uses: brandoncorrea/clojure-base@master
+      - uses: brandoncorrea/clojure-base@v1
 
       - name: Run ClojureScript Tests
         run: ME_ENV=ci clojure -M:test:cljs once
