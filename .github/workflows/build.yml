@@ -103,7 +103,7 @@ jobs:
             --filters "Name=tag:app,Values=${{ vars.APP_NAME }}" "Name=tag:env,Values=${{ vars.ME_ENV }}" \
             --query 'Addresses[0].AllocationId' \
             --output text)
-          aws ec2 associate-address --instance-id ${{ env.NEW_INSTANCE_ID }} --allocation-id $ALLOCATION_ID
+          aws ec2 associate-address --instance-id ${{ env.EC2_NEW_INSTANCE_ID }} --allocation-id $ALLOCATION_ID
 
       - name: Delete old instances if they exist
         if: env.EC2_OLD_INSTANCE_IDS != ''
