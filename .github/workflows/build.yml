@@ -109,19 +109,23 @@ jobs:
             cd ${{ vars.APP_NAME }}
 
             ./bin/prep
-          
+            ./bin/install-java
+            ./bin/install-clojure
+
             echo "Installing SSL"
             sudo echo "${{ secrets.SSL_CERTIFICATE }}" | sudo tee -a /etc/ssl/bwawan.com.crt > /dev/null
             sudo echo "${{ secrets.SSL_PRIVATE_KEY }}" | sudo tee -a /etc/ssl/bwawan.com.key > /dev/null
 
             echo "Installing Secrets"
             echo "ME_ENV=${{ vars.ME_ENV }}" >> .env
-            echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
             echo "DOMAIN=${{ vars.DOMAIN }}" >> .env
+            echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
 
             clojure -M:test:cljs once
             clojure -M:test:css once
-            clojure -M:test:install
+
+            ./bin/install-service ${{ vars.ME_ENV }}
+            ./bin/install-nginx ${{ vars.DOMAIN }}
           EOF
 
       - name: Wait for instance to be ready

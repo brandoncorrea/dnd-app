@@ -1,0 +1,4 @@
+#! /bin/sh
+
+echo "Installing Java 21"
+sudo apt install -y openjdk-21-jdk

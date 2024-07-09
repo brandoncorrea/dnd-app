@@ -1,0 +1,22 @@
+#! /bin/sh
+
+DOMAIN=$1
+
+declare -A REPLACEMENTS=(
+  ["<:domain>"]=$DOMAIN
+)
+
+echo "Installing Nginx"
+sudo apt-get install -y nginx
+
+echo "Building site.conf"
+for key in "${!REPLACEMENTS[@]}"; do
+  sed -i "s/$key/${REPLACEMENTS[$key]}/g" ./bin/site.conf
+done
+
+echo "Installing site.conf"
+sudo mv -f ./bin/site.conf /etc/nginx/sites-available/site.conf
+sudo ln -s /etc/nginx/sites-available/site.conf /etc/nginx/sites-enabled/
+
+echo "Reloading Nginx"
+sudo systemctl reload nginx
