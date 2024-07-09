@@ -32,7 +32,6 @@ jobs:
       cancel-in-progress: true
 
     steps:
-      - uses: actions/checkout@v4
       - uses: brandoncorrea/ec2-mono@master
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
