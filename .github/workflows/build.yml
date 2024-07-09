@@ -59,7 +59,7 @@ jobs:
       - name: Install Service
         run: |
           WORKING_DIRECTORY=$(pwd)
-          scp -r $WORKING_DIRECTORY ${{ secrets.SSH_USER }}@${{ env.PUBLIC_IP }}:~${{ vars.APP_NAME }}
+          scp -r $WORKING_DIRECTORY ${{ secrets.SSH_USER }}@${{ env.PUBLIC_IP }}:~/${{ vars.APP_NAME }}
           ssh -T ${{ secrets.SSH_USER }}@${{ env.PUBLIC_IP }} << 'EOF'
             cd ${{ vars.APP_NAME }}
 
