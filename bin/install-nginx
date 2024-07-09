@@ -3,7 +3,7 @@
 DOMAIN=$1
 
 declare -A REPLACEMENTS=(
-  ["<:domain>"]=$DOMAIN
+  ["<:domain>"]="$DOMAIN"
 )
 
 echo "Installing Nginx"

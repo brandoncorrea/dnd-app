@@ -9,7 +9,7 @@ else
 fi
 
 declare -A REPLACEMENTS=(
-  ["<:alias>"]=$ALIAS
+  ["<:alias>"]="$ALIAS"
 )
 
 echo "Building dnd.service"
