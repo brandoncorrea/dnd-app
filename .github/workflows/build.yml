@@ -32,46 +32,17 @@ jobs:
       cancel-in-progress: true
 
     steps:
-      - name: Install AWS CLI
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y awscli
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v2
+      - uses: brandoncorrea/ec2-mono@master
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
-
-      - name: Get old instance IDs
-        run: |
-          OLD_INSTANCE_IDS=$(aws ec2 describe-instances \
-            --filters "Name=tag:app,Values=${{ vars.APP_NAME }}" "Name=tag:env,Values=${{ vars.ME_ENV }}" "Name=instance-state-name,Values=pending,running,shutting-down,stopping,stopped" \
-            --query 'Reservations[*].Instances[*].InstanceId' \
-            --output text | tr '\n' ' ')
-          echo "OLD_INSTANCE_IDS=$OLD_INSTANCE_IDS" >> $GITHUB_ENV
-
-      - name: Deploy new EC2 instance
-        run: |
-          # Ubuntu 24.04 Base Image
-          IMAGE_ID=ami-04a81a99f5ec58529
-
-          NEW_INSTANCE_ID=$(aws ec2 run-instances \
-            --image-id $IMAGE_ID \
-            --count 1 \
-            --instance-type t2.small \
-            --key-name ${{ secrets.SSH_PRIVATE_KEY_NAME }} \
-            --security-group-ids ${{ secrets.SECURITY_GROUP_IDS }} \
-            --tag-specifications 'ResourceType=instance,Tags=[{Key=app,Value=${{ vars.APP_NAME }}},{Key=env,Value=${{ vars.ME_ENV }}}]' \
-            --query 'Instances[0].InstanceId' \
-            --output text)
-          echo "NEW_INSTANCE_ID=$NEW_INSTANCE_ID" >> $GITHUB_ENV
-
-      - name: Wait for Instance to Start
-        run: |
-          aws ec2 wait instance-running --instance-ids ${{ env.NEW_INSTANCE_ID }}
-          aws ec2 wait instance-status-ok --instance-ids ${{ env.NEW_INSTANCE_ID }}
+          aws-image-id: ami-04a81a99f5ec58529
+          aws-instance-type: t2.small
+          aws-security-group-ids: ${{ secrets.SECURITY_GROUP_IDS }}
+          aws-key-name: ${{ secrets.SSH_PRIVATE_KEY_NAME }}
+          app-name: ${{ vars.APP_NAME }}
+          env-name: ${{ vars.ME_ENV }}
 
       - name: Set up SSH key
         uses: webfactory/ssh-agent@v0.9.0
@@ -80,7 +51,7 @@ jobs:
 
       - name: Prep SSH
         run: |
-          PUBLIC_IP=$(aws ec2 describe-instances --instance-ids ${{ env.NEW_INSTANCE_ID }} --query 'Reservations[0].Instances[0].PublicIpAddress' --output text)
+          PUBLIC_IP=$(aws ec2 describe-instances --instance-ids ${{ env.EC2_NEW_INSTANCE_ID }} --query 'Reservations[0].Instances[0].PublicIpAddress' --output text)
           echo "PUBLIC_IP=$PUBLIC_IP" >> $GITHUB_ENV
           ssh-keyscan -H $PUBLIC_IP >> ~/.ssh/known_hosts
 
@@ -135,9 +106,9 @@ jobs:
           aws ec2 associate-address --instance-id ${{ env.NEW_INSTANCE_ID }} --allocation-id $ALLOCATION_ID
 
       - name: Delete old instances if they exist
-        if: env.OLD_INSTANCE_IDS != ''
-        run: aws ec2 terminate-instances --instance-ids ${{ env.OLD_INSTANCE_IDS }}
+        if: env.EC2_OLD_INSTANCE_IDS != ''
+        run: aws ec2 terminate-instances --instance-ids ${{ env.EC2_OLD_INSTANCE_IDS }}
 
       - name: Cleanup new instance if job fails
-        if: failure() && env.NEW_INSTANCE_ID != ''
-        run: aws ec2 terminate-instances --instance-ids ${{ env.NEW_INSTANCE_ID }}
+        if: failure() && env.EC2_NEW_INSTANCE_ID != ''
+        run: aws ec2 terminate-instances --instance-ids ${{ env.EC2_NEW_INSTANCE_ID }}
