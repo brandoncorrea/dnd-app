@@ -82,20 +82,11 @@ jobs:
           EOF
 
       - name: Wait for instance to be ready
-        run: |
-          MAX_WAIT_TIME=600
-          SLEEP_TIME=1
-          WAIT_TIME=0
-          until curl --insecure -s -o /dev/null -w "%{http_code}" https://${{ env.PUBLIC_IP }} | grep -q "200"; do
-            WAIT_TIME=$((WAIT_TIME + SLEEP_TIME))
-            if [ $WAIT_TIME -ge $MAX_WAIT_TIME ]; then
-              echo "Timed out waiting for instance to be ready."
-              exit 1
-            fi
-            echo "Waiting for instance to be ready..."
-            sleep $SLEEP_TIME
-          done
-          echo "Instance is ready."
+        uses: iFaxity/wait-on-action
+        with:
+          resource: https://${{ env.PUBLIC_IP }}
+          interval: 1000
+          timeout: 600000
 
       - name: Allocate Elastic IP Address
         run: |
