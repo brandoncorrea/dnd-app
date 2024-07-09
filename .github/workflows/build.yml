@@ -82,7 +82,7 @@ jobs:
           EOF
 
       - name: Wait for instance to be ready
-        uses: iFaxity/wait-on-action@v0.2.2
+        uses: iFaxity/wait-on-action@v1.2.1
         with:
           resource: https://${{ env.PUBLIC_IP }}
           interval: 1000
