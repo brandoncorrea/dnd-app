@@ -50,10 +50,6 @@ jobs:
             ./bin/install-java
             ./bin/install-clojure
 
-            echo "Installing SSL"
-            sudo echo "${{ secrets.SSL_CERTIFICATE }}" | sudo tee -a /etc/ssl/bwawan.com.crt > /dev/null
-            sudo echo "${{ secrets.SSL_PRIVATE_KEY }}" | sudo tee -a /etc/ssl/bwawan.com.key > /dev/null
-
             echo "Installing Secrets"
             echo "ME_ENV=${{ vars.ME_ENV }}" >> .env
             echo "DOMAIN=${{ vars.DOMAIN }}" >> .env
@@ -63,4 +59,4 @@ jobs:
             clojure -M:test:css once
 
             ./bin/install-service ${{ vars.ME_ENV }}
-            ./bin/install-nginx ${{ vars.DOMAIN }}
+            ./bin/install-nginx ${{ vars.DOMAIN }} ${{ secrets.SSL_CERTIFICATE }} ${{ secrets.SSL_PRIVATE_KEY }}

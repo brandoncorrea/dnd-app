@@ -1,6 +1,12 @@
 #! /bin/sh
 
 DOMAIN=$1
+SSL_CERTIFICATE=$2
+SSL_PRIVATE_KEY=$3
+
+echo "Installing SSL"
+sudo echo "$SSL_CERTIFICATE" | sudo tee -a /etc/ssl/$DOMAIN.crt > /dev/null
+sudo echo "$SSL_PRIVATE_KEY" | sudo tee -a /etc/ssl/$DOMAIN.key > /dev/null
 
 echo "Installing Nginx"
 sudo apt-get install -y nginx
