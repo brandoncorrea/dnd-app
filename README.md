@@ -1,4 +1,4 @@
-# D&D Website
+# Dungeons & Dragons
 
 An app to help me play Dungeons & Dragons.
 
@@ -9,93 +9,37 @@ An app to help me play Dungeons & Dragons.
     # clojure
     brew install clojure
 
-    # node
-    brew install npm
-
-    # http-server
-    npm i http-server -g
-
-    # NPM Install
-    npm i
+    # java
+    I don't remember how to install this on MacOS.
+    Use Java 21
 
 ## Commands
 
-    # Watch for css changes
-    clj -Mcss
+    # watch for css changes
+    clj -M:test:css
+
+    # build cljs on-change (development)
+    clj -M:test:cljs
+
+    # build cljs once (deployment)
+    clj -M:test:cljs once
 
     # watch for both css/cljs changes and run specs
-    clj -Mtest:dev-
+    clj -M:test:dev-
 
-    # build cljs on-change (for development)
-    clj -Mcljs auto production
-
-    # build cljs once (for production)
-    clj -Mcljs once production
-
-## Sandbox
-
-### Configuration
-
-The sandbox pages will only appear in the `development` environment.
-To show them, update `main.cljs` with the `"development"` configuration.
-
-For production, you will want these hidden. Update `main.cljs` to start up with `"production"`.
-
-### Playing in the Sandbox
-
-A sandbox page is just an implementation of `page/render`.
-
-1. Create a cljs file under `src/cljs/dnd/sandbox` - call it whatever you'd like!
-
-```clojure
-(ns dnd.sandbox.example
-  (:require [dnd.page :as page]))
-
-(defmethod page/render :sandbox/example [_]
-  ; Your hiccup code here...
-  )
-```
-
-2. Add your new namespace to `dnd.sandbox.core`
-
-```clojure
-(ns dnd.sandbox.core
-  (:require ;...namespaces... 
-            [dnd.sandbox.example]
-            ;...namespaces...
-    ))
-```
-
-3. Create a test for your new sandbox in `dnd.router-spec`
-
-```clojure
-(context "sandbox" 
-  ; ...specs... 
-  (it-routes "/sandbox/example" :sandbox/example)
-  ; ...more specs...
-  )
-```
-
-4. Pass your test in `dnd.router`
-
-```clojure
-(defn def-sandbox []
-  ; ...routes...
-  (defroute "/sandbox/example" [] (page/install! :sandbox/example))
-  ; ...more routes...
-  )
-```
-
-Note: Your `:sandbox/keyword` will need to exactly match your route: `"/sandbox/keyword"`.
+    # see test coverage
+    clj -M:test:coverage
 
 ## Deployment
 
-    # Build cljs
-    clj -Mcljs once production
+    # Stage
+    git checkout stage
+    git merge master
+    git push
+    git checkout master
 
-    # Build css
-    clj -Mcss once
-
-## Local HTTP Server
-
-    bin/server
+    # Production
+    git checkout production
+    git merge stage
+    git push
+    git checkout master
