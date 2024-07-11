@@ -49,6 +49,13 @@
             handler (sut/wrap-errors (stub :handler {:throw ex}))]
         (should= (layouts/error ex) (handler :request))
         (should= (str ex) (log/captured-logs-str))))
+
+    (it "throws with causes"
+      (let [cause   (Throwable.)
+            ex      (Exception. "one cause" cause)
+            handler (sut/wrap-errors (stub :handler {:throw ex}))]
+        (should= (layouts/error ex) (handler :request))
+        (should= (str ex) (log/captured-logs-str))))
     )
 
   )

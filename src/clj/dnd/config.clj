@@ -23,5 +23,8 @@
     base
     development))
 
+(defn ->host [{:keys [tls? domain]}]
+  (str (if tls? "https://" "http://") domain))
+
 (def env (select-env environment))
-(def host (str (if (:tls? env) "https://" "http://") (:domain env)))
+(def host (->host env))

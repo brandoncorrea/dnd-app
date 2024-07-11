@@ -6,7 +6,6 @@
             [c3kit.wire.jwt :as jwt]
             [clj-stacktrace.core :as cst]
             [clj-stacktrace.repl :as cstr]
-            [clojure.string :as str]
             [dnd.config :as config]
             [hiccup.core :as hiccup]
             [hiccup.element :as elem]
@@ -38,7 +37,7 @@
 (defn- ->main-script [data]
   (let [payload (pr-str (utilc/->transit data))]
     (str "<script type=\"text/javascript\">\n//<![CDATA[\n"
-         "dnd.main.main(" (str/replace payload "</script>" "<\\/script>") ");"
+         "dnd.main.main(" payload ");"
          "\n//]]>\n</script>")))
 
 (defn build-rich-client-payload [request]

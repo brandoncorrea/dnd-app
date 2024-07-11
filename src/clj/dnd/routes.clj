@@ -14,10 +14,10 @@
           (or (handler request)
               (not-found-handler request)))))))
 
-(def resolve-handler
-  (cond-> util/resolve-var
-          config/development?
-          memoize))
+(defn memoize-dev [f]
+  (cond-> f config/development? memoize))
+
+(def resolve-handler (memoize-dev util/resolve-var))
 
 (defn lazy-handle
   "Reduces load burden of this ns, which is useful in development.
