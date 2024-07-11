@@ -7,7 +7,7 @@
             [dnd.config :as config]
             [dnd.home]
             [dnd.page :as page]
-            [dnd.router :as router]
+            [dnd.routes :as routes]
             [reagent.dom :as dom]))
 
 (goog/exportSymbol "goog.require" goog/require)
@@ -21,7 +21,7 @@
   (let [{:keys [config]} (utilc/<-transit payload)]
     (configure-api! config)
     (config/install! config)
-    (router/defroutes)
+    (routes/defroutes)
     (accountant/dispatch-current!)
     (dom/render [page/default] (wjs/element-by-id "app-root"))))
 

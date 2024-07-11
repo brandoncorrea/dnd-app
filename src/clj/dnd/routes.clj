@@ -47,7 +47,9 @@
 (def web-routes-handlers
   (lazy-routes
     {
-     ["/" :get] dnd.layouts/web-rich-client
+     ["/" :get]       dnd.layouts/web-rich-client
+     ["/spells" :get] dnd.layouts/web-rich-client
+     ["/shapes" :get] dnd.layouts/web-rich-client
      }))
 
 (defroutes handler

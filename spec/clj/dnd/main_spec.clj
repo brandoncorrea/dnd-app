@@ -2,6 +2,7 @@
   (:require [c3kit.apron.app :as app]
             [c3kit.apron.env :as env]
             [c3kit.apron.log :as log]
+            [c3kit.apron.refresh :as refresh]
             [c3kit.wire.api :as api]
             [dnd.config :as config]
             [dnd.core :as core]
@@ -13,12 +14,12 @@
 (describe "Main"
   (with-stubs)
   (spec-helperc/capture-logs-around)
-  (redefs-around [shutdown-agents          :shutdown-agents
-                  c3kit.apron.refresh/init (stub :refresh/init)
-                  app/start!               (stub :app/start!)
-                  app/stop!                (stub :app/stop!)
-                  env/env                  (stub :env/env {:return "the-env"})
-                  core/add-shutdown-hook   (stub :add-shutdown-hook)])
+  (redefs-around [shutdown-agents        :shutdown-agents
+                  refresh/init           (stub :refresh/init)
+                  app/start!             (stub :app/start!)
+                  app/stop!              (stub :app/stop!)
+                  env/env                (stub :env/env {:return "the-env"})
+                  core/add-shutdown-hook (stub :add-shutdown-hook)])
 
   (it "main - non-development"
     (with-redefs [config/development? false]

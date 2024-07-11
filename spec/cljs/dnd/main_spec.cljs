@@ -8,7 +8,7 @@
             [dnd.config :as config]
             [dnd.main :as sut]
             [dnd.page :as page]
-            [dnd.router :as router]))
+            [dnd.routes :as routes]))
 
 (defmethod page/render :main [_]
   [:div#-main])
@@ -18,7 +18,8 @@
   (wire/with-root-dom)
   (before (wire/render [:div#app-root])
           (reset! config/state {}))
-  (redefs-around [router/defroutes             (stub :defroutes)
+
+  (redefs-around [routes/defroutes             (stub :defroutes)
                   accountant/dispatch-current! (stub :accountant/dispatch-current!)])
 
   (it "main"
@@ -27,7 +28,6 @@
                   :anti-forgery-token "anti-forgery token"
                   :ws-csrf-token      "csrf token"}]
       (sut/main (utilc/->transit {:config config}))
-      ;(wire/flush)
       (should= "the version" (:version @api/config))
       (should= "csrf token" (:ws-csrf-token @api/config))
       (should= config @config/state)

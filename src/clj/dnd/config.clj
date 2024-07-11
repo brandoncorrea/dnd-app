@@ -16,15 +16,11 @@
    :log-level  :trace
    :jwt-secret "secret"})
 
-(def stage base)
-(def production base)
-
 (def development? (= "development" environment))
 
 (defn select-env [environment]
-  (case environment
-    "production" production
-    "stage" stage
+  (if (#{"production" "stage"} environment)
+    base
     development))
 
 (def env (select-env environment))

@@ -3,8 +3,14 @@
 
 (def state (reagent/atom nil))
 (defn clear! [] (reset! state nil))
-(defn install! [page] (swap! state assoc :current page))
 (def current (reagent/track #(:current @state)))
+
+(defn- update-state [state page options]
+  (-> (assoc state :current page)
+      (update page merge options)))
+
+(defn install! [page & {:as options}]
+  (swap! state update-state page options))
 
 (defn cursor
   ([path] (cursor path nil))
@@ -16,4 +22,4 @@
 (defmulti render identity)
 (defmethod render :default [_] [:h1 "404 – Not Found"])
 
-(defn default [] (render @current))
+(defn default [] [render @current])
