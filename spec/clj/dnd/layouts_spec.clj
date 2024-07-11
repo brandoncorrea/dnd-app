@@ -21,28 +21,29 @@
   (context "web-rich-client"
 
     (it "non-development"
-      (let [{:keys [status headers body]} (sut/web-rich-client {})
-            payload {:flash  nil
-                     :config {
-                              :anti-forgery-token nil
-                              :ws-csrf-token      nil
-                              :api-version        (api/version)
-                              :environment        config/environment
-                              :host               config/host
-                              }}]
-        (should= 200 status)
-        (should= {"Content-Type" "text/html; charset=UTF-8"} headers)
-        (should-not-contain "/cljs/goog/base.js" body)
-        (should-contain "goog.require('dnd.main');" body)
-        (should-contain "src=\"/cljs/dnd.js\"" body)
-        (should-not-contain "src=\"/cljs/goog/base.js\"" body)
-        (should-contain "/css/dnd.css" body)
-        (should-contain (str "<script type=\"text/javascript\">\n"
-                             "//<![CDATA[\n"
-                             "dnd.main.main(" (pr-str (utilc/->transit payload)) ");\n"
-                             "//]]>\n"
-                             "</script>")
-                        body)))
+      (with-redefs [config/development? false]
+        (let [{:keys [status headers body]} (sut/web-rich-client {})
+              payload {:flash  nil
+                       :config {
+                                :anti-forgery-token nil
+                                :ws-csrf-token      nil
+                                :api-version        (api/version)
+                                :environment        config/environment
+                                :host               config/host
+                                }}]
+          (should= 200 status)
+          (should= {"Content-Type" "text/html; charset=UTF-8"} headers)
+          (should-not-contain "/cljs/goog/base.js" body)
+          (should-contain "goog.require('dnd.main');" body)
+          (should-contain "src=\"/cljs/dnd.js\"" body)
+          (should-not-contain "src=\"/cljs/goog/base.js\"" body)
+          (should-contain "/css/dnd.css" body)
+          (should-contain (str "<script type=\"text/javascript\">\n"
+                               "//<![CDATA[\n"
+                               "dnd.main.main(" (pr-str (utilc/->transit payload)) ");\n"
+                               "//]]>\n"
+                               "</script>")
+                          body))))
 
     (it "development"
       (with-redefs [config/development? true]
