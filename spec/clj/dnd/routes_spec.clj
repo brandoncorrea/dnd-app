@@ -26,8 +26,9 @@
 
   ;; web routes
   (test-route "/" :get dnd.layouts/web-rich-client)
-  (test-route "/spells" :get dnd.layouts/web-rich-client)
-  (test-route "/shapes" :get dnd.layouts/web-rich-client)
+  (test-route "/druid" :get dnd.layouts/web-rich-client)
+  (test-route "/druid/spells" :get dnd.layouts/web-rich-client)
+  (test-route "/druid/shapes" :get dnd.layouts/web-rich-client)
 
   ;; ajax routes
   (test-route "/ajax/user/csrf-token" :get dnd.user/ajax-csrf-token)
