@@ -9,7 +9,7 @@ else
 fi
 
 echo "Building dnd.service"
-sed -i '' -e "s/<:alias>/$ALIAS/g" ./bin/dnd.service
+sed -i "s/<:alias>/$ALIAS/g" ./bin/dnd.service
 
 echo "Installing site.conf"
 sudo mv -f ./bin/dnd.service /etc/systemd/system/dnd.service
