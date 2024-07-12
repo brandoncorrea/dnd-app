@@ -59,4 +59,4 @@ jobs:
             clojure -M:test:css once
 
             ./bin/install-service ${{ vars.ME_ENV }}
-            ./bin/install-nginx ${{ vars.DOMAIN }} ${{ secrets.SSL_CERTIFICATE }} ${{ secrets.SSL_PRIVATE_KEY }}
+            ./bin/install-nginx ${{ vars.DOMAIN }} "${{ secrets.SSL_CERTIFICATE }}" "${{ secrets.SSL_PRIVATE_KEY }}"
