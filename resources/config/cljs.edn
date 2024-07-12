@@ -1,7 +1,8 @@
 {
  :env-keys       ["me.env" "ME_ENV"]
  :ns-prefix      "dnd"
- :ignore-console ["Failed to load resource: net::ERR_FILE_NOT_FOUND"]
+ :ignore-console ["Failed to load resource: net::ERR_FILE_NOT_FOUND"
+                  "Download the React DevTools"]
  :development    {:cache-analysis true
                   :optimizations  :none
                   :output-dir     "resources/public/cljs/"
