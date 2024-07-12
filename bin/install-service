@@ -2,7 +2,7 @@
 
 ME_ENV=$1
 
-if [ "$ME_ENV"  == 'stage']; then
+if [ "$ME_ENV" == "stage" ]; then
   ALIAS=":test"
 else
   ALIAS=""
