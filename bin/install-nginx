@@ -12,7 +12,7 @@ echo "Installing Nginx"
 sudo apt-get install -y nginx
 
 echo "Building site.conf"
-sed -i '' -e "s/<:domain>/$DOMAIN/g" ./bin/site.conf
+sed -i "s/<:domain>/$DOMAIN/g" ./bin/site.conf
 
 echo "Installing site.conf"
 sudo mv -f ./bin/site.conf /etc/nginx/sites-available/site.conf
